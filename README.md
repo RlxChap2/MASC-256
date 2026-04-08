@@ -4,7 +4,7 @@ MASC-256 is a continuous evolution symmetric stream cipher utilizing memory-depe
 
 ## Architecture Diagram
 
-![MASC-256 Architecture Overview](assets/MASC256_alg.svg)
+<img src="assets/MASC256_alg.svg" width="150%" />
 
 ## Core Components
 
