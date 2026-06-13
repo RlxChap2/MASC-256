@@ -1,12 +1,13 @@
-#include <stdlib.h>
-#include "acc_crypto.h"
+#include "masc256_internal.h"
 
 uint64_t rotl(uint64_t x, int r) {
-    return (x << r) | (x >> (64 - r));
+    r &= 63;
+    return r == 0 ? x : (x << r) | (x >> (64 - r));
 }
 
 uint64_t rotr(uint64_t x, int r) {
-    return (x >> r) | (x << (64 - r));
+    r &= 63;
+    return r == 0 ? x : (x >> r) | (x << (64 - r));
 }
 
 void stack_mix(ACC *acc, uint64_t v) {
@@ -21,18 +22,14 @@ void stack_mix(ACC *acc, uint64_t v) {
     }
 }
 
-void heap_mix(ACC *acc, uint64_t seed) {
-    uint64_t *heap = malloc(64 * sizeof(uint64_t));
-
-    for(int i = 0; i < 64; i++) {
+void heap_mix_scratch(ACC *acc, uint64_t seed, uint64_t heap[MASC256_HEAP_WORDS]) {
+    for(int i = 0; i < MASC256_HEAP_WORDS; i++) {
         heap[i] = rotl(seed ^ (acc->a + i), (i % 31) + 1);
         acc->a += heap[i];
         acc->b ^= rotl(heap[i], (i % 17) + 3);
         acc->c += acc->b ^ heap[i];
         acc->d ^= rotl(acc->c, (i % 13) + 5);
     }
-
-    free(heap);
 }
 
 void accumulator_round(ACC *acc) {

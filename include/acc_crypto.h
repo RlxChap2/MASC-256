@@ -4,23 +4,55 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef struct {
-    uint64_t a;
-    uint64_t b;
-    uint64_t c;
-    uint64_t d;
-} ACC;
+#define MASC256_VERSION 2
+#define MASC256_NONCE_SIZE 16
+#define MASC256_TAG_SIZE 32
+#define MASC256_OVERHEAD (MASC256_NONCE_SIZE + MASC256_TAG_SIZE)
 
-uint64_t rotl(uint64_t x, int r);
-uint64_t rotr(uint64_t x, int r);
+#define MASC256_OK 0
+#define MASC256_ERR_INVALID -1
+#define MASC256_ERR_AUTH -2
+#define MASC256_ERR_RANDOM -3
+#define MASC256_ERR_BUFFER -4
 
-void stack_mix(ACC *acc, uint64_t v);
-void heap_mix(ACC *acc, uint64_t seed);
-void accumulator_round(ACC *acc);
+int masc256_random_nonce(uint8_t nonce[MASC256_NONCE_SIZE]);
 
-void init_acc(ACC *acc, const uint8_t *key, size_t len);
+int masc256_encrypt(uint8_t *data,
+                    size_t len,
+                    const uint8_t *key,
+                    size_t klen,
+                    const uint8_t nonce[MASC256_NONCE_SIZE],
+                    const uint8_t *aad,
+                    size_t aad_len,
+                    uint8_t tag[MASC256_TAG_SIZE]);
 
-void encrypt(uint8_t *data, size_t len, const uint8_t *key, size_t klen);
-void decrypt(uint8_t *data, size_t len, const uint8_t *key, size_t klen);
+int masc256_decrypt(uint8_t *data,
+                    size_t len,
+                    const uint8_t *key,
+                    size_t klen,
+                    const uint8_t nonce[MASC256_NONCE_SIZE],
+                    const uint8_t *aad,
+                    size_t aad_len,
+                    const uint8_t tag[MASC256_TAG_SIZE]);
+
+int masc256_seal(uint8_t *out,
+                 size_t out_cap,
+                 size_t *out_len,
+                 const uint8_t *plaintext,
+                 size_t plaintext_len,
+                 const uint8_t *key,
+                 size_t klen,
+                 const uint8_t *aad,
+                 size_t aad_len);
+
+int masc256_open(uint8_t *out,
+                 size_t out_cap,
+                 size_t *out_len,
+                 const uint8_t *sealed,
+                 size_t sealed_len,
+                 const uint8_t *key,
+                 size_t klen,
+                 const uint8_t *aad,
+                 size_t aad_len);
 
 #endif
