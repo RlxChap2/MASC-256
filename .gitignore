@@ -1,11 +1,56 @@
-# Build directory
+# Build directories
 build/
+build-*/
+cmake-build-*/
+out/
+dist/
 test/
 
-# Executables
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing/
+compile_commands.json
+CMakeUserPresets.json
+
+# Binaries and object files
 *.exe
 *.out
 *.app
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.dSYM/
+*.pdb
+*.ilk
+*.exp
+acc_crypto
+masc256_tests
+
+# Coverage and sanitizer output
+*.gcda
+*.gcno
+*.gcov
+coverage/
+*.profraw
+*.profdata
+asan.log*
+ubsan.log*
+valgrind.log*
+
+# Fuzzing output
+afl-out/
+findings/
+crashes/
+hangs/
+queue/
 
 # IDEs and Editors
 .vscode/

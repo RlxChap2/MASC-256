@@ -9,6 +9,11 @@ run:
 	cmake --build $(BUILD_DIR)
 	./$(BUILD_DIR)/$(TARGET)
 
+test:
+	cmake -B $(BUILD_DIR) -S . -DBUILD_TESTING=ON
+	cmake --build $(BUILD_DIR)
+	ctest --test-dir $(BUILD_DIR) --output-on-failure
+
 debug:
 	cmake -B $(BUILD_DIR) -S . -DCMAKE_BUILD_TYPE=Debug
 	cmake --build $(BUILD_DIR) --config Debug
